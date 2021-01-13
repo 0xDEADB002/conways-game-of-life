@@ -18,15 +18,15 @@ class Conway:
         self.lastUpdated = time.time()
 
         initialVisibleGrid = np.array([
-            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -40,6 +40,7 @@ class Conway:
                                                       (self.visibleTopCoordinate, self.visibleTopCoordinate)), 'constant')
         self.actualGrid.astype(int)
         self.is_refreshed = False
+        self.currentColumn = 0
         # print(self.actualGrid[242:258, 242:258])
 
     def get_cell_neighbour_life(self, i, j):
@@ -99,10 +100,17 @@ class Conway:
         self.actualGrid.astype(int)
 
     def getVisibleFrame(self):
-        # if (time.time() - self.lastUpdated > 0.4 ):
-        before = time.time()
-        self.getNewFrame()
-        print(time.time() - before, 'time for recalc')
-        self.lastUpdated = int(time.time())
+        change = False
+        if (time.time() - self.lastUpdated > 0.05):
+            change = True
+            if self.currentColumn >= self.visibleWidthSize - 1:
+                print('called after', time.time()-self.lastUpdated)
+                before = time.time()
+                self.getNewFrame()
+                print(time.time() - before, 'time for recalc')
+                self.currentColumn = 0
+            else:
+                self.currentColumn = self.currentColumn + 1
+            self.lastUpdated = time.time()
 
-        return self.actualGrid[self.visibleTopCoordinate: (self.visibleTopCoordinate+self.visibleHeightSize), self.visibleLeftCoordinate: (self.visibleLeftCoordinate+self.visibleWidthSize)]
+        return self.actualGrid[self.visibleTopCoordinate: (self.visibleTopCoordinate+self.visibleHeightSize), self.visibleLeftCoordinate: (self.visibleLeftCoordinate+self.visibleWidthSize)], self.currentColumn, change
