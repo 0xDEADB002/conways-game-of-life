@@ -1,18 +1,14 @@
-import pygame 
+import pygame
 from conway import Conway
 pygame.init()
 
 conway = Conway()
 
 
-
-
-
-
 # 16 * 50
 
-height = 50 
-width = 50 
+height = 50
+width = 50
 margin = 5
 
 widthCount = 16
@@ -30,47 +26,46 @@ running = True
 currentRow = 0
 currentColumn = 0
 
-white = (255,255,255)
-black = (0,0,0)
+white = (255, 255, 255)
+black = (0, 0, 0)
 
 while running:
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False 
-  
-  screen.fill((192,192,192))
-  conway_frame=conway.getVisibleFrame()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-  #  sync this somehow
+    screen.fill((192, 192, 192))
+    conway_frame = conway.getVisibleFrame()
 
-  for column in range(widthCount):
-    for row in range(heightCount):
-      color = white
-      if (conway_frame[row][column]):
-        color = black
-          
-      pygame.draw.rect(
-        screen, 
-        color, 
-        [
-          (margin + width) * column + margin, 
-          (margin+height) * row + margin, 
-          width, 
-          height
-        ]
-      )
+    #  sync this somehow
 
+    for column in range(widthCount):
+        for row in range(heightCount):
+            color = white
+            if (conway_frame[row][column]):
+                color = black
 
-  currentRow = currentRow + 1
-  currentColumn = currentColumn + 1
-  if (currentColumn > 15):
-    currentColumn = 0
+            pygame.draw.rect(
+                screen,
+                color,
+                [
+                    (margin + width) * column + margin,
+                    (margin+height) * row + margin,
+                    width,
+                    height
+                ]
+            )
 
-  if currentRow >15:
-    currentRow = 0
-  clock.tick(25)
+    currentRow = currentRow + 1
+    currentColumn = currentColumn + 1
+    if (currentColumn > 15):
+        currentColumn = 0
 
-  pygame.display.flip()
+    if currentRow > 15:
+        currentRow = 0
+    clock.tick(25)
+
+    pygame.display.flip()
 
 
 pygame.quit()
